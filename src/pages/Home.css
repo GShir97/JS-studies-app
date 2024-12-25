@@ -1,0 +1,26 @@
+.header-container {
+    display: flex;
+    justify-content: center;
+    }
+  
+  .links-container {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    }
+  
+  a {
+    align-items:normal;
+    text-decoration: none;
+    color: blue;
+    }
+  
+  h1{
+    height:fit-content;
+  }
+  
+  body {
+    background-color: rgb(176, 174, 174);
+    font-family:'Gill Sans', sans-serif;
+  }
+  
