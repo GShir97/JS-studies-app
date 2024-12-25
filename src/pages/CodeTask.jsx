@@ -1,72 +1,77 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { LightAsync as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import  CodeMirror from '@uiw/react-codemirror'; 
+import { javascript } from '@codemirror/lang-javascript'; 
+import './CodeTask.css'
 
 function CodeTask() {
   const { id } = useParams();
-  console.log('Fetched ID from URL:', id);
-  const [codeBlock, setCodeBlock] = useState(null);
-  const [editorText, setEditorText] = useState('');
+  const [task, setTask] = useState(null);
+  const [code, setCode] = useState(''); 
+  const [solution, setSolution] = useState('');
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const fetchCodeBlock = async () => {
       try {
-        console.log('Sending request to:', `http://localhost:3000/api/tasks/${id}`);
         const response = await fetch(`http://localhost:3000/api/tasks/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setCodeBlock(data);
-        setEditorText(data.code || '');
+        setTask(data);
+        setCode(data.code);
+        setSolution(data.solution);
       } catch (error) {
-        console.error('Error fetching code block:', error);
+        console.error('Error fetching code block:', error.message);
       }
     };
+
     fetchCodeBlock();
   }, [id]);
 
-  useEffect(() => {
-    if (codeBlock && editorText === codeBlock.solution) {
+  const handleChange = (value) => {
+    setCode(value);
+    if (value.trim() === solution.trim()) {
       setSuccess(true);
     } else {
       setSuccess(false);
     }
-  }, [editorText, codeBlock]);
+  };
 
   return (
-    <div style={{ textAlign: 'center', margin: '20px' }}>
-      <h1>{codeBlock?.name || 'Loading...'}</h1>
-      <p>Number of users in this page: {codeBlock?.usersCount || 0}</p>
-      <div style={{ border: '1px solid #ddd', padding: '10px', borderRadius: '5px' }}>
-        <textarea
-          value={editorText}
-          onChange={(e) => setEditorText(e.target.value)}
-          style={{
-            width: '100%',
-            height: '300px',
-            fontFamily: 'monospace',
-            fontSize: '14px',
-          }}
-        />
-        <SyntaxHighlighter language="javascript" style={docco}>
-          {editorText}
-        </SyntaxHighlighter>
-      </div>
-      {success && (
-        <div style={{ marginTop: '20px' }}>
-          <img
-            src="/Smiley.png"
-            alt="Smiley face"
-            style={{ width: '150px', height: '150px' }}
-          />
-          <p style={{ color: 'green', fontSize: '20px' }}>You solved it!</p>
-        </div>
+    <div className="code-task-container">
+      {task ? (
+        <>
+          <div className="task-header">
+            <h1>{task.name}</h1>
+            <h3>Number of viewers: {task.usersCount}</h3>
+          </div>
+          <div className="code-editor-container">
+            <CodeMirror
+              value={code}
+              height="500px"
+              extensions={[javascript()]}
+              theme="dark"
+              onChange={handleChange}
+            />
+            {success && (
+              <div className="success-message">
+                <img
+                  src="/Smiley.png"
+                  alt="Smiley face"
+                />
+                <p>Great Job!</p>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <p>Loading task data...</p>
       )}
     </div>
   );
+  
 }
 
 export default CodeTask;
