@@ -61,24 +61,25 @@ function CodeTask() {
       socket.disconnect();
     };
   }, [id, navigate]);
-
-  useEffect(() => {
-    if (code && solution) {
-      const cleanValue = code.trim().replace(/\s+/g, " ");
-      const cleanSolution = solution.trim().replace(/\s+/g, " ");
-      if (cleanValue === cleanSolution) {
-        setSuccess(true);
-      } else {
-        setSuccess(false);
-      }
-    }
-  }, [code, solution]);
+  
 
   const handleChange = (value) => {
-    if (role === "student") {
-      setCode(value);
-      socket.emit("updateCode", { id, code: value });
+    const cleanValue = value.trim().replace(/\s+/g, " ");
+    const cleanSolution = solution.trim().replace(/\s+/g, " ");
+
+    setCode(value);
+
+    if (cleanValue === cleanSolution) {
+      setSuccess(true);
+      console.log("Correct solution!");
+    } else {
+      setSuccess(false);
+      console.log("Incorrect solution!");
     }
+      if (role === "student") {
+        setCode(value);
+        socket.emit("updateCode", { id, code: value });
+      }
   };
 
   return (
