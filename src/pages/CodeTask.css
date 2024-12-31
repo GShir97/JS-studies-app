@@ -10,6 +10,25 @@
 
   .success-message {
     justify-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 999;
+  }
+
+  .success-message img {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
+  }
+
+  .success-message p{
+    background-color: rgba(255, 255, 255, 0.9);
+    font-size: 1.8rem;
   }
   
   h1 {

@@ -98,6 +98,7 @@ function CodeTask() {
               extensions={[javascript()]}
               theme="dark"
               onChange={handleChange}
+              editable={role !== "mentor"}
             />
             {success && (
               <div className="success-message">
