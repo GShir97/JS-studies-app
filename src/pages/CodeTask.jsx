@@ -5,7 +5,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript'; 
 import './CodeTask.css';
 
-const socket = io("http://localhost:3000");
+const socket = io("https://js-studies-app.onrender.com");
 
 function CodeTask() {
   const { id } = useParams();
@@ -24,7 +24,7 @@ function CodeTask() {
 
     const fetchCodeBlock = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/tasks/${id}`);
+        const response = await fetch(`https://js-studies-app.onrender.com/api/tasks/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

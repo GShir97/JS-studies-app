@@ -9,7 +9,7 @@ function Home() {
     useEffect(() => {
         const fetchTasks = async () => {
           try {
-            const response = await fetch('http://localhost:3000/api/tasks');
+            const response = await fetch('https://js-studies-app.onrender.com/api/tasks');
             const data = await response.json();
             console.log('Fetched tasks:', data);
             setTasks(data);
