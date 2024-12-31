@@ -13,12 +13,12 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(cors({ origin: "http://localhost:5173", methods: ["GET", "POST"] }));
+app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
 app.use(express.json());
 app.use('/api/tasks', taskRoutes);
 
@@ -30,6 +30,7 @@ io.on("connection", (socket) => {
   socket.on("joinTask", async ({ taskId }) => {
     try {
       const task = await Task.findById(taskId);
+      console.log(`socket ${socket.id}`);
       if (task) {
         socket.join(taskId);
         const usersInRoom = io.sockets.adapter.rooms.get(taskId);
@@ -37,10 +38,10 @@ io.on("connection", (socket) => {
 
         if (!isMentorInRoom) {
           connectedUsers[socket.id] = "mentor";
-          socket.emit("role", "mentor");
+          io.to(socket.id).emit("role", "mentor");
         } else {
           connectedUsers[socket.id] = "student";
-          socket.emit("role", "student");
+          io.to(socket.id).emit("role", "student");
         }
 
         updateViewersCount(taskId);
